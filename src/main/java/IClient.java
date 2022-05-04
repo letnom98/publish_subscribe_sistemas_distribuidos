@@ -4,5 +4,10 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface IClient extends Remote {
-	void exhibit(String message) throws RemoteException;
+	void alert(String message) throws RemoteException;
+	void publishVideo(String name) throws RemoteException;
+	void publishChannel(String name) throws RemoteException;
+	void subscribe(String channelName) throws RemoteException;
+	void listChannels() throws RemoteException;
+	void setServer(IServer lookup);
 }
