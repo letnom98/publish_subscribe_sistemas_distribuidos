@@ -9,5 +9,5 @@ public interface IClient extends Remote {
 	void publishChannel(String name) throws RemoteException;
 	void subscribe(String channelName) throws RemoteException;
 	void listChannels() throws RemoteException;
-	void setServer(IServer lookup);
+	void setServer(IServer server) throws RemoteException;
 }

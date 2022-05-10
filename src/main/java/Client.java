@@ -1,61 +1,22 @@
 package main.java;
 
-import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class Client implements IClient {
-	
-	private String name;
-	protected IServer server;
-	
-	public Client(String name) {
-		super();
-		this.name =  name;
-	}
+public class Client extends UnicastRemoteObject implements IClient {
 
-	@Override
-	public void alert(String message) throws RemoteException {
-		System.out.println(message);
-	}
-	
-	@Override
-	public void publishVideo(String name) throws RemoteException {
-		server.publish(this, name);
-		
-	}
-	
-	@Override
-	public void publishChannel(String name) throws RemoteException {
-		server.publish(this, new Channel(name, this.name));
-		
-	}
-	
-	@Override
-	public void subscribe(String channelName) throws RemoteException {
-		server.subscribe(this, channelName);
-	}
-	
-	@Override
-	public void listChannels() throws RemoteException {
-		List<String> availableChannels =  server.availableChannels();
-		availableChannels.forEach(channel -> System.out.println(channel));
-	}
-	
-	public static void main(String args[]) throws MalformedURLException, NotBoundException {
-		String clientName = args[0], serverName = args[1];
-		int port = args[1] != "" ? Integer.parseInt(args[2]) : 1099;
-		try {
-			IClient client = (IClient)UnicastRemoteObject.exportObject(new Client(clientName), port);
-			client.setServer((IServer)Naming.lookup(serverName));
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -474121027877997630L;
+	private String name;
+	private IServer server;
+
+	public Client(String name, IServer server) throws RemoteException {
+		super();
+		this.name = name;
+		this.server = server;
 	}
 
 	public String getName() {
@@ -66,10 +27,43 @@ public class Client implements IClient {
 		this.name = name;
 	}
 
-	@Override
+	public IServer getServer() {
+		return server;
+	}
+
 	public void setServer(IServer server) {
 		this.server = server;
-		
+
+	}
+
+	@Override
+	public void alert(String message) throws RemoteException {
+		System.out.println(message);
+	}
+
+	@Override
+	public void publishVideo(String name) throws RemoteException {
+		server.publish(this, name);
+	}
+
+	@Override
+	public void publishChannel(String name) throws RemoteException {
+		server.publish(this, new Channel(name, this.name));
+	}
+
+	@Override
+	public void subscribe(String channelName) throws RemoteException {
+		server.subscribe(this, channelName);
+	}
+
+	@Override
+	public void listChannels() throws RemoteException {
+		List<String> availableChannels = server.availableChannels();
+		if (availableChannels.isEmpty()) {
+			System.out.println("No channels available");
+		} else {
+			availableChannels.forEach(channel -> System.out.println(channel));
+		}
 	}
 
 }
