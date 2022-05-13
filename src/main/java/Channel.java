@@ -1,12 +1,15 @@
 package main.java;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Channel {
-	//public static enum VISIBILITY{PUBLIC, PRIVATE};
+public class Channel implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8103427165286100960L;
 	private String name;
 	private String owner;
-	//private VISIBILITY visibility;
 	private List<String> videos;
 	
 	public Channel(String name, String owner) {
